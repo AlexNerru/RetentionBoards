@@ -1,0 +1,5 @@
+django
+gunicorn
+sqlalchemy
+plotly
+psycopg2-binary
