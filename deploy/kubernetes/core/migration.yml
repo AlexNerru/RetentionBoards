@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: retentionboards_core-migrations
+spec:
+  template:
+    spec:
+      containers:
+        - name: retentionboards_core
+          image: retentionboards.azurecr.io/retentionboards_core:1.1
+          command: ['python', 'manage.py', 'migrate']
+          env:
+            - name: SQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: user
+
+            - name: SQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: password
+
+            - name: SQL_HOST
+              value: postgres-service
+
+            - name: SQL_ENGINE
+              value: django.db.backends.postgresql
+
+            - name: SQL_DATABASE
+              value: kubernetes_django
+      restartPolicy: Never
+  backoffLimit: 5

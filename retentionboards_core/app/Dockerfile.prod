@@ -17,12 +17,12 @@ RUN apk update \
     && apk add postgresql-dev gcc python3-dev musl-dev
 
 # lint
-RUN pip install --upgrade pip
-RUN pip install flake8
+#RUN pip install --upgrade pip
+#RUN pip install flake8
+#RUN flake8 --ignore=E501,F401 .
 COPY . /usr/src/app/
 
-## разобраться потом
-#RUN flake8 --ignore=E501,F401 .
+
 
 # install dependencies
 COPY ./requirements.txt .
@@ -59,6 +59,7 @@ RUN pip install --no-cache /wheels/*
 
 # copy entrypoint-prod.sh
 COPY ./entrypoint.prod.sh $APP_HOME
+COPY ./wait-for.sh $APP_HOME
 
 # copy project
 COPY . $APP_HOME
@@ -70,6 +71,7 @@ RUN chown -R app:app $APP_HOME
 USER app
 
 RUN chmod +x /home/app/web/entrypoint.prod.sh
+RUN chmod +x /home/app/web/wait-for.sh
 
 # run entrypoint.prod.sh
 ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]

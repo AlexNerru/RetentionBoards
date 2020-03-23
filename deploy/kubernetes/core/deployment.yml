@@ -1,0 +1,49 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: retentionboards_core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: retentionboards-core-container
+  template:
+    metadata:
+      labels:
+        app: retentionboards-core-container
+    spec:
+      containers:
+        - name: retentionboards_core
+          image: retentionboards.azurecr.io/retentionboards_core:1.1
+          ports:
+            - containerPort: 8000
+          env:
+            - name: SQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: user
+
+            - name: SQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: password
+
+            - name: SQL_HOST
+              value: postgres-service
+
+            - name: SQL_ENGINE
+              value: django.db.backends.postgresql
+
+            - name: SQL_DATABASE
+              value: kubernetes_django
+
+          volumeMounts:
+            - name: postgres-volume-mount
+              mountPath: /var/lib/busybox
+
+      volumes:
+        - name: postgres-volume-mount
+          persistentVolumeClaim:
+            claimName: postgres-pvc

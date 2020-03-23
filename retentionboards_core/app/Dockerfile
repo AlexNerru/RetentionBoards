@@ -19,10 +19,12 @@ RUN pip install -r requirements.txt
 
 # copy entrypoint.sh
 COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
+COPY ./wait-for.sh /usr/src/app/wait-for.sh
 
 # copy project
 COPY . /usr/src/app/
 
 RUN chmod +x /usr/src/app/entrypoint.sh
+RUN chmod +x /usr/src/app/wait-for.sh
 # run entrypoint.sh
 ENTRYPOINT ["/usr/src/app/entrypoint.sh"]

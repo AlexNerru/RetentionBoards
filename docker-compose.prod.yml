@@ -3,9 +3,9 @@ version: '3.7'
 services:
   web:
     build:
-      context: ./RetentionBoardsCore/app
+      context: ./retentionboards_core/app
       dockerfile: Dockerfile.prod
-    command: gunicorn RetentionBoards.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn retentionboards_core.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
@@ -26,7 +26,7 @@ services:
     networks:
       - main
   nginx:
-    build: ./RetentionBoardsCore/nginx
+    build: retentionboards_core/nginx
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
