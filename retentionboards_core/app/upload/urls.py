@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import my_pub_view
+from .views import UploadView
 
 app_name = 'upload'
 
 urlpatterns = [
-    path('csv/', my_pub_view),
+    path('csv/', UploadView.as_view()),
 ]

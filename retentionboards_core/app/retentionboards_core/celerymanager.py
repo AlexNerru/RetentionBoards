@@ -9,7 +9,6 @@ app = Celery('retentionboards_core')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
-
 with app.pool.acquire(block=True) as conn:
     exchange = kombu.Exchange(
         name='retention_exchange',

@@ -38,6 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'users',
+    'events',
+    'upload',
+
+    #'guardian',
 ]
 
 MIDDLEWARE = [
@@ -105,6 +111,34 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'file_django': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': 'logs/logger.log',
+            },
+            'file_django_requests': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': 'logs/request_logger.log',
+            }
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['file_django'],
+                'level': 'DEBUG',
+                'propagate': True,
+            },
+            'django.request': {
+                'handlers': ['file_django_requests'],
+                'level': 'DEBUG',
+                'propagate': False,
+            }
+        },
+    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -123,8 +157,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATICFILES_DIRS = ( os.path.join('staticfiles'), )
+
 STATIC_URL = '/staticfiles/'
-STATIC_ROOT = '/staticfiles'
+STATIC_ROOT = '/staticfiles/'
 
 MEDIA_URL = '/mediafiles/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')

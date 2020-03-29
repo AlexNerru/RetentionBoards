@@ -14,11 +14,26 @@ services:
       - db
       - redis_queue
       - redis_cache
+      - retentioneering
+
+  retentioneering:
+    build: retentionboards_retentioneering/app
+    command: sh -c "python manage.py runserver 0.0.0.0:8002"
+    volumes:
+      - retentioneering:/usr/src/app/
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+      - redis_queue
+      - redis_cache
 
   db:
     image: postgres:12.0-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
     environment:
       - POSTGRES_USER=hello_django
       - POSTGRES_PASSWORD=hello_django
@@ -59,3 +74,4 @@ volumes:
   redis_cache_data:
   celery_data:
   app:
+  retentioneering:
