@@ -1,3 +1,3 @@
-from .celerymanager import app as celery_app
+from retentionboards_core.celery import app as celery_app
 
 __all__ = ('celery_app',)

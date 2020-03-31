@@ -1,7 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 from celery import task
 from celery import shared_task
-from retentionboards_core.celerymanager import app
+from retentionboards_core.celery import app
 
 @shared_task
 def hello():

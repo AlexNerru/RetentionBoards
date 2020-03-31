@@ -33,19 +33,3 @@ with app.pool.acquire(block=True) as conn:
 @app.task(bind=True)
 def debug_task(self):
     print('Request: {0!r}'.format(self.request))
-
-
-class MyConsumerStep(bootsteps.ConsumerStep):
-
-    def get_consumers(self, channel):
-        return [kombu.Consumer(channel,
-                               queues=[queue],
-                               callbacks=[self.handle_message],
-                               accept=['json'])]
-
-    def handle_message(self, body, message):
-        print('Received message: {0!r}'.format(body))
-        message.ack()
-
-
-app.steps['consumer'].add(MyConsumerStep)

@@ -1,7 +1,7 @@
 django
 gunicorn
 psycopg2-binary
-redis
-celery
-kombu
+redis==3.2.1
+celery==4.3.0
+kombu==4.5.0
 django-guardian

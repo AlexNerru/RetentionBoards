@@ -53,6 +53,18 @@ services:
       - db
       - redis_queue
       - web
+      - retentioneering
+
+  celery_retentioneering:
+    build: retentionboards_retentioneering/app
+    command: sh -c "celery -A retentionboards_retentioneering worker -l info"
+    volumes:
+      - celery_data:/code
+    depends_on:
+      - db
+      - redis_queue
+      - web
+      - retentioneering
 
   flower:
     image: mher/flower
