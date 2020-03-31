@@ -3,9 +3,7 @@ from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
-'''from retentionboards_core.client import connection, send_as_task
-from retentionboards_core.tasks import hello_task'''
-from .tasks import publish_message
+from retentionboards_core.celery import send_as_task, send_as_message
 from events.models import EventSet, Event
 
 import logging
@@ -13,6 +11,7 @@ import csv, io
 
 logger = logging.getLogger('django')
 request_logger = logging.getLogger('django.request')
+
 
 class UploadView(View):
     template = "upload_csv.html"
@@ -22,7 +21,6 @@ class UploadView(View):
             return render(request, self.template)
         else:
             return redirect('/web/app/')
-
 
     def post(self, request):
         if request.user.is_authenticated:
@@ -39,7 +37,7 @@ class UploadView(View):
             print(type(eventset))
             event_list = []
             for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-                event = Event (
+                event = Event(
                     event_name=column[0],
                     event_timestamp=column[1],
                     user_pseudo_id=column[2],
@@ -47,11 +45,7 @@ class UploadView(View):
                 )
                 event_list.append(event)
             Event.objects.bulk_create(event_list)
-            publish_message({'hello': 'world'})
-            '''send_as_task(connection, fun=hello_task, args=('Kombu',), kwargs={},
-                         priority='high')'''
+            send_as_message({"Hello": "kombu"})
             return redirect('/web/app/')
         else:
             return redirect('/web/app/')
-
-

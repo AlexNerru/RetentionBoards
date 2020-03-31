@@ -27,6 +27,8 @@ services:
       - db
       - redis_queue
       - redis_cache
+    deploy:
+      replicas: 4
 
   db:
     image: postgres:12.0-alpine

@@ -1,7 +1,8 @@
+from __future__ import absolute_import, unicode_literals
+
 import os
 from celery import Celery, bootsteps
-import kombu
-from time import sleep
+from kombu import Exchange, Queue, Consumer
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'retentionboards_retentioneering.settings')
 
@@ -9,39 +10,63 @@ app = Celery('retentionboards_retentioneering')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
+priority_to_routing_key = {'high': 'hipri',
+                           'mid': 'midpri',
+                           'low': 'lopri'}
+
 with app.pool.acquire(block=True) as conn:
-    exchange = kombu.Exchange(
+    exchange = Exchange(
         name='retention_exchange',
         type='direct',
         durable=True,
         channel=conn,
     )
-    exchange.declare()
-    queue = kombu.Queue(
-        name='retention_queue',
+
+    queue_hi = Queue(
+        name='retention_queue_hi',
         exchange=exchange,
-        routing_key='key',
+        routing_key='hipri',
         channel=conn,
         message_ttl=600,
-        queue_arguments={
-            'x-queue-type': 'classic'
-        },
         durable=True
     )
-    queue.declare()
 
-@app.task(bind=True)
-def debug_task(self):
-    print('Request: {0!r}'.format(self.request))
+    queue_mid = Queue(
+        name='retention_queue_mid',
+        exchange=exchange,
+        routing_key='midpri',
+        channel=conn,
+        message_ttl=600,
+        durable=True
+    )
+
+    queue_lo = Queue(
+        name='retention_queue_lo',
+        exchange=exchange,
+        routing_key='lopri',
+        channel=conn,
+        message_ttl=600,
+        durable=True
+    )
 
 
 class MyConsumerStep(bootsteps.ConsumerStep):
 
     def get_consumers(self, channel):
-        return [kombu.Consumer(channel,
-                               queues=[queue],
-                               callbacks=[self.handle_message],
-                               accept=['json'])]
+        return [Consumer(channel,
+                         queues=[queue_hi, queue_mid, queue_lo],
+                         callbacks=[self.handle_message],
+                         accept=['json'])]
+
+    def process_task(self, body, message):
+        fun = body['fun']
+        args = body['args']
+        kwargs = body['kwargs']
+        try:
+            fun(*args, **kwargs)
+        except Exception as exc:
+            print("Error")
+        message.ack()
 
     def handle_message(self, body, message):
         print('Received message: {0!r}'.format(body))
