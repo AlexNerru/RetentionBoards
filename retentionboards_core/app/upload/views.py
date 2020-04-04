@@ -3,8 +3,9 @@ from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
-from retentionboards_core.celery import send_as_task, send_as_message
+from retentionboards_core.celery_manager import send_as_message
 from events.models import EventSet, Event
+from retentionboards_core.tasks import send_ping
 
 import logging
 import csv, io
@@ -34,7 +35,6 @@ class UploadView(View):
 
             eventset, _ = EventSet.objects.update_or_create(name=csv_file.name[:-4], user=request.user)
 
-            print(type(eventset))
             event_list = []
             for column in csv.reader(io_string, delimiter=',', quotechar="|"):
                 event = Event(
@@ -45,7 +45,8 @@ class UploadView(View):
                 )
                 event_list.append(event)
             Event.objects.bulk_create(event_list)
-            send_as_message({"Hello": "kombu"})
+            send_ping.apply_async(args=[{"task": "prepare_dataset", "eventset_id": 1}], queue='retention_queue_hi',
+                                  routing_key='high')
             return redirect('/web/app/')
         else:
             return redirect('/web/app/')

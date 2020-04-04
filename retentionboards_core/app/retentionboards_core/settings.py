@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'events',
     'upload',
 
+    'django_celery_beat',
     #'guardian',
 ]
 
@@ -170,3 +171,18 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", 'redis://redis_q
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Moscow'
+
+'''CELERY_BEAT_SCHEDULE = {
+ 'send-summary-every-second': {
+       'task': 'ping',
+       'schedule': 1.0,
+       'args': ('We don’t need any',),
+    },
+
+    # Executes every Friday at 4pm
+    'send-notification-on-friday-afternoon': {
+         'task': 'notification',
+         'schedule': crontab(hour=16, day_of_week=5),
+        },
+}'''

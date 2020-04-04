@@ -9,12 +9,11 @@ services:
     ports:
       - 8000:8000
     env_file:
-      - ./.env.dev
+      - env.dev.web
     depends_on:
       - db
       - redis_queue
       - redis_cache
-      - retentioneering
 
   retentioneering:
     build: retentionboards_retentioneering/app
@@ -22,11 +21,12 @@ services:
     volumes:
       - retentioneering:/usr/src/app/
     env_file:
-      - ./.env.dev
+      - env.dev.services
     depends_on:
       - db
       - redis_queue
       - redis_cache
+      - web
     deploy:
       replicas: 4
 
@@ -34,12 +34,10 @@ services:
     image: postgres:12.0-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - env.dev.db
     ports:
       - 5432:5432
-    environment:
-      - POSTGRES_USER=hello_django
-      - POSTGRES_PASSWORD=hello_django
-      - POSTGRES_DB=hello_django_dev
 
   redis_queue:
     image: redis:latest
@@ -51,22 +49,37 @@ services:
     command: sh -c "celery -A retentionboards_core worker -l info"
     volumes:
       - celery_data:/code
+    env_file:
+      - env.dev.services
     depends_on:
       - db
       - redis_queue
       - web
-      - retentioneering
+
+  celery_beat:
+    build: retentionboards_core/app
+    command: sh -c "celery -A retentionboards_core beat -l debug"
+    volumes:
+      - celery_beat:/code
+    env_file:
+      - env.dev.services
+    depends_on:
+      - db
+      - redis_queue
+      - web
 
   celery_retentioneering:
     build: retentionboards_retentioneering/app
     command: sh -c "celery -A retentionboards_retentioneering worker -l info"
     volumes:
-      - celery_data:/code
+      - celery_rete:/code
+    env_file:
+      - env.dev.services
     depends_on:
       - db
       - redis_queue
-      - web
       - retentioneering
+      - web
 
   flower:
     image: mher/flower
@@ -89,3 +102,5 @@ volumes:
   celery_data:
   app:
   retentioneering:
+  celery_beat:
+  celery_rete:

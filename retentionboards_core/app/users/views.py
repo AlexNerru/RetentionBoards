@@ -1,8 +1,5 @@
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views import View
-from django.shortcuts import get_object_or_404
-from django.core.exceptions import PermissionDenied
 from users.forms import LoginForm, RegisterForm
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.models import User
@@ -86,8 +83,10 @@ class RegisterView(View):
 class LogoutView(View):
 
     def get(self, request):
+
         request_logger.debug(request)
+
         logout(request)
         form = LoginForm()
         register = RegisterForm()
-        return redirect('/', {'form': form, 'form_register': register})
+        return redirect('/web/app', {'form': form, 'form_register': register})

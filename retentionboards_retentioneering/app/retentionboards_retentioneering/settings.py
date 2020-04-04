@@ -32,7 +32,6 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -51,23 +50,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'retentionboards_retentioneering.urls'
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
-
 WSGI_APPLICATION = 'retentionboards_retentioneering.wsgi.application'
 
 
@@ -85,35 +67,6 @@ DATABASES = {
     }
 }
 
-
-LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'handlers': {
-            'file_django': {
-                'level': 'DEBUG',
-                'class': 'logging.FileHandler',
-                'filename': 'logs/logger.log',
-            },
-            'file_django_requests': {
-                'level': 'DEBUG',
-                'class': 'logging.FileHandler',
-                'filename': 'logs/request_logger.log',
-            }
-        },
-        'loggers': {
-            'django': {
-                'handlers': ['file_django'],
-                'level': 'DEBUG',
-                'propagate': True,
-            },
-            'django.request': {
-                'handlers': ['file_django_requests'],
-                'level': 'DEBUG',
-                'propagate': False,
-            }
-        },
-    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
