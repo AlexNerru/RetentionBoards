@@ -1,16 +1,14 @@
-from django.http import HttpResponse
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
 from events.models import EventSet, Event
 
-from retentionboards_core.celery_manager import send_as_message
-from retentionboards_core.tasks import send_ping
-from retentionboards_core.celery_manager import app as celery_app
-
 import logging
 import csv, io
+
+from celery_manager import app as celery_app
+from celery import states
 
 logger = logging.getLogger('django')
 request_logger = logging.getLogger('django.request')
@@ -47,6 +45,9 @@ class UploadView(View):
                 )
                 event_list.append(event)
             Event.objects.bulk_create(event_list)
+
+            data = celery_app.send_task(name='prepare_dataset', args=[eventset.id], queue='retention_queue_hi')
+
             return redirect('/web/app/')
         else:
             return redirect('/web/app/')

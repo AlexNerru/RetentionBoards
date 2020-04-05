@@ -8,7 +8,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'retentionboards_core.settings')
 
 app = Celery('retentionboards_core')
 app.config_from_object('django.conf:settings', namespace='CELERY')
-app.autodiscover_tasks()
+app.autodiscover_tasks(['retentionboards_core.tasks'], force=True)
 
 priority_to_routing_key = {'high': 'hipri',
                            'mid': 'midpri',
@@ -36,5 +36,6 @@ def send_as_message(message, priority='mid'):
                           exchange=exchange,
                           declare=[exchange],
                           routing_key=routing_key)
+
 
 

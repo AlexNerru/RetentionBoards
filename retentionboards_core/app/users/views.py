@@ -5,9 +5,8 @@ from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.models import User
 from django.contrib import messages
 
-from retentionboards_core.celery_manager import send_as_message
-from retentionboards_core.tasks import send_ping
-from retentionboards_core.celery_manager import app as celery_app
+from celery_manager import app as celery_app
+from celery.result import AsyncResult
 
 import logging
 
@@ -24,8 +23,6 @@ class MainView(View):
 
         form = LoginForm()
         register = RegisterForm()
-
-        send_as_message({"task": "pong", "id": "pong"}, priority='mid')
 
         return render(request, self.template_name, {'form': form, 'form_register': register})
 

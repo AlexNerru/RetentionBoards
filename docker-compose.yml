@@ -70,7 +70,7 @@ services:
 
   celery_retentioneering:
     build: retentionboards_retentioneering/app
-    command: sh -c "celery -A retentionboards_retentioneering worker -l info"
+    command: sh -c "celery -A retentionboards_retentioneering worker -l info --concurrency=10"
     volumes:
       - celery_rete:/code
     env_file:
