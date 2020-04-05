@@ -18,7 +18,14 @@ with app.pool.acquire(block=True) as conn:
 
     exchange = Exchange(name='retention_exchange', type='direct', durable=True, channel=conn)
 
-    exchange.declare()
+    queue_task = Queue(name='retention_queue_task', exchange='retention_exchange', routing_key='task', message_ttl=600,
+                     durable=True, channel=conn)
+
+    app.conf.task_queues=[queue_task]
+
+    app.conf.task_default_exchange = 'retention_exchange'
+    app.conf.task_default_exchange_type = 'direct'
+    app.conf.task_default_routing_key = 'task'
 
 
 def send_as_message(message, priority='mid'):
@@ -29,4 +36,5 @@ def send_as_message(message, priority='mid'):
                           exchange=exchange,
                           declare=[exchange],
                           routing_key=routing_key)
+
 

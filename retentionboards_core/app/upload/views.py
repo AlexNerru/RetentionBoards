@@ -3,9 +3,11 @@ from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
-from retentionboards_core.celery_manager import send_as_message
 from events.models import EventSet, Event
+
+from retentionboards_core.celery_manager import send_as_message
 from retentionboards_core.tasks import send_ping
+from retentionboards_core.celery_manager import app as celery_app
 
 import logging
 import csv, io
@@ -45,8 +47,6 @@ class UploadView(View):
                 )
                 event_list.append(event)
             Event.objects.bulk_create(event_list)
-            send_ping.apply_async(args=[{"task": "prepare_dataset", "eventset_id": 1}], queue='retention_queue_hi',
-                                  routing_key='high')
             return redirect('/web/app/')
         else:
             return redirect('/web/app/')

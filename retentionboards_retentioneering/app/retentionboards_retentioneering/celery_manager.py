@@ -1,17 +1,10 @@
 from __future__ import absolute_import, unicode_literals
 
 import os
-from celery import Celery, bootsteps, shared_task
-from kombu import Exchange, Queue, Consumer
 from time import sleep
+from celery import Celery, bootsteps, shared_task
+from kombu import Queue, Consumer
 from analytics.analytics import prepare_dataset
-
-
-@shared_task(name='ping')
-def send_ping(message="hello world"):
-    sleep(10)
-    print(message)
-
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'retentionboards_retentioneering.settings')
 
@@ -19,23 +12,27 @@ app = Celery('retentionboards_retentioneering')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
+@shared_task(name='ping')
+def send_ping(message="hello ping"):
+    print(message)
+
+@shared_task(name='pong')
+def send_pong(message="hello pong"):
+    sleep(10)
+    print(message)
+
 with app.connection_or_acquire(block=True) as conn:
-    exchange = Exchange(name='retention_exchange', type='direct', durable=True, channel=conn)
 
-    exchange.declare()
-
-    queue_hi = Queue(name='retention_queue_hi', exchange=exchange, routing_key='hipri', message_ttl=600,
+    queue_hi = Queue(name='retention_queue_hi', exchange='retention_exchange', routing_key='hipri', message_ttl=600,
                      durable=True, channel=conn)
-    queue_mid = Queue(name='retention_queue_mid', exchange=exchange, routing_key='midpri', message_ttl=600,
+    queue_mid = Queue(name='retention_queue_mid', exchange='retention_exchange', routing_key='midpri', message_ttl=600,
                       durable=True, channel=conn)
-    queue_lo = Queue(name='retention_queue_lo', exchange=exchange, routing_key='lopri', message_ttl=600,
+    queue_lo = Queue(name='retention_queue_lo', exchange='retention_exchange', routing_key='lopri', message_ttl=600,
                      durable=True, channel=conn)
 
     queues = [queue_hi, queue_mid, queue_lo]
 
-    for queue in queues:
-        queue.declare()
-
+    app.conf.task_queues = queues
 
 class MyConsumerStep(bootsteps.ConsumerStep):
 

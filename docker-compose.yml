@@ -74,7 +74,7 @@ services:
     volumes:
       - celery_rete:/code
     env_file:
-      - env.dev.services
+      - env.dev.web
     depends_on:
       - db
       - redis_queue
@@ -88,6 +88,8 @@ services:
       - 8888:8888
     depends_on:
       - celery
+      - celery_beat
+      - celery_retentioneering
       - redis_queue
 
   redis_cache:
