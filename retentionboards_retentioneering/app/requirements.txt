@@ -4,7 +4,7 @@ psycopg2-binary
 redis
 celery
 kombu
-django-guardian
 retentioneering
-
+django-redis
+umap-learn
 

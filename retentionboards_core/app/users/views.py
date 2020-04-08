@@ -5,9 +5,6 @@ from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.models import User
 from django.contrib import messages
 
-from celery_manager import app as celery_app
-from celery.result import AsyncResult
-
 import logging
 
 logger = logging.getLogger('django')
@@ -38,7 +35,7 @@ class LoginView(View):
             user = authenticate(username=form.data['username'], password=form.data['password'])
             if user is not None:
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                return redirect('/web/app/upload/csv/')
+                return redirect('/web/app/dashboard/')
             else:
                 form = LoginForm()
                 register = RegisterForm()
@@ -66,7 +63,7 @@ class RegisterView(View):
                     user.save()
                     if user is not None:
                         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                        return redirect('/web/app/upload/csv/')
+                        return redirect('/web/app/dashboard/')
                 else:
                     register = RegisterForm()
                     form = LoginForm()
@@ -93,4 +90,4 @@ class LogoutView(View):
         logout(request)
         form = LoginForm()
         register = RegisterForm()
-        return redirect('/web/app', {'form': form, 'form_register': register})
+        return redirect('/web/app/', {'form': form, 'form_register': register})

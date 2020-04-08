@@ -28,14 +28,5 @@ with app.pool.acquire(block=True) as conn:
     app.conf.task_default_routing_key = 'task'
 
 
-def send_as_message(message, priority='mid'):
-    routing_key = priority_to_routing_key[priority]
-    with app.producer_pool.acquire(block=True) as publisher:
-        publisher.publish(message,
-                          serializer='json',
-                          exchange=exchange,
-                          declare=[exchange],
-                          routing_key=routing_key)
-
 
 

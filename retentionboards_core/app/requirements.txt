@@ -6,3 +6,4 @@ celery
 kombu
 django-guardian
 django_celery_beat
+django_redis

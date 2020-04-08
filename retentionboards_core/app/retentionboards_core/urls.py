@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 import upload.urls
 import users.urls
+import dashboards.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('web/app/upload/', include(upload.urls)),
-    path('web/app/', include(users.urls))
+    path('web/app/', include(users.urls)),
+    path('web/app/dashboard/', include(dashboards.urls))
 ]

@@ -68,12 +68,12 @@
             <div class="container">
                 {% csrf_token %}
                 {{ form_register }}
-                <div class="row" style="margin-top:10px">
-                <button type="submit" class="col-md-5 btn-success">Register</button>
-                    <div class="col-md-2"> </div>
-                <button type="button" class="btn-danger cancelbtn col-md-5" onclick="document.getElementById('id03').style.display='none'">
-                    Cancel
-                </button>
+                <div class="row" style="margin-top:10px; margin-left: 30px">
+                    <button type="submit" class="col-md-5 btn-success">Register</button>
+                    <button type="button" class="btn-danger cancelbtn col-md-5" style="margin-right: 30px" onclick="document.getElementById('id03').style.display='none'">
+                        Cancel
+                    </button>
+                </div>
             </div>
         </form>
     </div>

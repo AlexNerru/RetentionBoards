@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'users',
-    'events',
+    'dashboards',
     'upload',
 
     'django_celery_beat',
@@ -90,6 +90,16 @@ DATABASES = {
         "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
         "HOST": os.environ.get("SQL_HOST", "localhost"),
         "PORT": os.environ.get("SQL_PORT", "5432"),
+    }
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": os.environ.get("CACHE_ENGINE", "django.core.cache.backends.memcached.MemcachedCache"),
+        "LOCATION": os.environ.get("CACHE_LOCATION", "127.0.0.1:11211"),
+        "OPTIONS": {
+            "CLIENT_CLASS": os.environ.get("CACHE_CLIENT_CLASS", ""),
+        }
     }
 }
 

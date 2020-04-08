@@ -71,18 +71,18 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-2">
-                        <div id="colorlib-logo"><a href="">StockDash</a></div>
+                        <div id="colorlib-logo"><a href="">RetentionBoards</a></div>
                     </div>
                     <div class="col-md-10 text-right menu-1">
                         <ul>
-                            <li class="active"><a href="/">Home</a></li>
+                            <li class="active"><a href="/web/app/">Home</a></li>
                             {% if user.is_authenticated %}
-                                <li><a href="/portfolios/">Portfolios</a></li>
+                                <li><a href="/web/app/dashboard/">Dashboard</a></li>
                             {% endif %}
                             <!-- <li><a href="about.html">About</a></li>
                             <li><a href="contact.html">Contact</a></li> -->
                             {% if user.is_authenticated %}
-                                <li><a href="/logout/">Logout, {{ user.username }}</a></li>
+                                <li><a href="/web/app/logout/">Logout, {{ user.username }}</a></li>
                             {% else %}
                                 <li>
                                     <button onclick="document.getElementById('id01').style.display='block'"
