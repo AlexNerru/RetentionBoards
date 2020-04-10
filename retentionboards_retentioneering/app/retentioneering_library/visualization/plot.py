@@ -91,9 +91,7 @@ def _make_json_data(data, node_params, layout_dump, thresh=.05, width=500, heigh
     else:
         data["type"] = data.apply(
             lambda x: node_params.get(x.source) if node_params.get(x.source) == 'source' else node_params.get(
-                x.target) or 'suit',
-            1
-        )
+                x.target) or 'suit', 1)
     pos, degrees = _calc_layout(data, node_params, width=width, height=height, **kwargs)
     if kwargs.get('node_weights') is not None:
         degrees = kwargs.get('node_weights')
@@ -411,7 +409,6 @@ def altair_cluster_tsne(data, clusters, target, plot_name=None, **kwargs):
     return scatter, plot_name, tsne, data.retention.retention_config
 
 
-@__save_plot__
 def cluster_tsne(data, clusters, target, plot_name=None, **kwargs):
     """
     Plots TSNE projection of user stories colored by clusters. Each point represents a user session or whole user trajectory.
@@ -719,6 +716,7 @@ class ___FigureWrapper__(object):
         return (x[0]/ 64, x[0] + (x[1] - x[0]) / 50, x[2] / 1.5, x[3] / 1.5)
 
     def text(self, *args, **kwargs):
+
         self.fig.text(*args, **kwargs)
 
 

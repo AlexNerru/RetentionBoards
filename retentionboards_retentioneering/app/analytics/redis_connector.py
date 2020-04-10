@@ -1,20 +1,33 @@
 from redis import Redis
-from io import StringIO
 import os
 import pickle
+from PIL import Image
 
-redis = Redis(host='redis_queue', port=6379)
+redis = Redis(host=os.environ.get("REDIS_HOST", 'redis'), port=os.environ.get("REDIS_PORT", 6379))
 
 
 def save_image_to_redis(eventset, key, image):
     directory = f'experiments/{eventset}/'
     filename = f'experiments/{eventset}/{key}.png'
     if not os.path.exists(directory):
-        os.mkdir(directory)
+        os.makedirs(directory)
     image.figure.savefig(filename)
-    with open(filename, 'rb') as f:
-        file = f.read()
-        data = pickle.dumps(file)
-    redis.set(eventset, data)
+    im = Image.open(filename)
+    data = pickle.dumps(im)
+    redis_id = key + str(eventset)
+    redis.set(redis_id, data)
     os.remove(filename)
+
+    return redis_id
+
+
+def save_html_to_redis(eventset, key, name, cluster):
+    with open(name, 'r') as f:
+        html = f.read()
+    data = pickle.dumps(html)
+    redis_id = key + str(eventset) + '_' + str(cluster)
+    redis.set(redis_id, data)
+
+    return redis_id
+
 

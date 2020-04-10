@@ -10,9 +10,9 @@
                         <div class="services">
                             <article>
                                 <a>
-                                                <span class="icon">
-								                    <i class="icon-plus"></i>
-                                                </span>
+                                    <span class="icon">
+                                        <i class="icon-plus"></i>
+                                    </span>
                                     <h3>Click here to create set of events</h3>
                                 </a>
                             </article>
@@ -23,14 +23,13 @@
                             <div class="services">
 
                                 <article>
-                                    <a href={{ portfolio.href }}>
+                                    <a href={{ eventset.href }}>
                                         <span class="icon">
                                             <i class="icon-coin-dollar"></i>
                                         </span>
                                         <h2>{{ eventset.name }}</h2>
-                                        {% if portfolio.not_empty %}
-                                            <h3>{{ portfolio.get_profit_percent }}%</h3>
-                                        {% endif %}
+                                        <h3 id={{eventset.name}}></h3>
+
                                     </a>
                                 </article>
                             </div>
@@ -38,21 +37,19 @@
                     {% endfor %}
                 </div>
             {% endfor %}
-            {% for row in list|slice:"1:" %}
+            {% for row in eventsets|slice:"1:" %}
                 <div class="row">
-                    {% for portfolio in row %}
+                    {% for eventset in row %}
                         <div class="col-md-4 text-center animate-box">
                             <div class="services">
                                 <article>
-                                    <a href={{ portfolio.href }}>
+                                    <a href={{ eventset.href }}>
 
                                     <span class="icon">
-								<i class="icon-coin-dollar"></i>
-                        </span>
-                                        <h2>{{ portfolio.name }}</h2>
-                                        {% if portfolio.not_empty %}
-                                            <h3>{{ portfolio.get_profit_percent }}%</h3>
-                                        {% endif %}
+								        <i class="icon-coin-dollar"></i>
+                                    </span>
+                                    <h2>{{ eventset.name }}</h2>
+                                        <h3 id={{eventset.name}}></h3>
                                     </a>
                                 </article>
                             </div>
@@ -64,35 +61,18 @@
     </div>
 
     <div id="id02" class="modal">
-        <form class="modal-content animate" enctype="multipart/form-data" action="/web/app/upload/csv/" method="post"
-              style="margin-left: 30px; margin-right: 30px">
+        <form class="modal-content animate" enctype="multipart/form-data" action="/web/app/dashboard/csv/" method="post">
             <div style="padding-top: 1%; padding-left: 2%">
                 <h2>
                     Load csv file to import events data
                 </h2>
             </div>
-            <div>
+            <div style="margin-left: 30px; margin-right: 30px">
                 {% csrf_token %}
                 {{ form }}
-                <button type="submit">Upload</button>
+                <button type="submit" style="margin-top: 10px">Upload</button>
             </div>
         </form>
     </div>
-
-    <script>
-        function CheckStatus() {
-            $(function () {
-                $.ajax({
-                    type: 'POST',
-                    url: '/web/app/dashboard/check_status/',
-                    data: {{task_id}},
-                    dataType: 'json'
-                });
-            });
-        }
-
-        setInterval( CheckStatus, 1000 );
-        CheckStatus()
-    </script>
 
 {% endblock %}

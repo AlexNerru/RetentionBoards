@@ -41,7 +41,6 @@ INSTALLED_APPS = [
 
     'users',
     'dashboards',
-    'upload',
 
     'django_celery_beat',
     #'guardian',

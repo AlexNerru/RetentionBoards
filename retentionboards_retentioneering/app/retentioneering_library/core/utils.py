@@ -55,8 +55,6 @@ def init_config(**config):
     -------
     Updates or creates ``retention_config`` dict variable with defined values.
     """
-    if 'experiments_folder' not in config:
-        config.update({'experiments_folder': '{}'.format(pd.datetime.now()).replace(':', '-').split('.')[0]})
     if 'target_event_list' not in config:
         config.update({
             'target_event_list': [
@@ -64,33 +62,27 @@ def init_config(**config):
                 config.get('positive_target_event'),
             ]
         })
+
     if 'columns_map' not in config:
         config['columns_map'] = {
             'user_pseudo_id': config.get('index_col'),
             'event_name': config.get('event_col'),
             'event_timestamp':  config.get('event_time_col'),
         }
-    if not os.path.exists(config['experiments_folder']):
-        os.mkdir(config['experiments_folder'])
-
-    with open(os.path.join(config['experiments_folder'], "config.json"), "w") as f:
-        json.dump(config, f)
 
     @pd.api.extensions.register_dataframe_accessor("trajectory")
     class RetentioneeringTrajectory(BaseTrajectory):
 
         def __init__(self, pandas_obj):
             super(RetentioneeringTrajectory, self).__init__(pandas_obj)
-            with open(os.path.join(config['experiments_folder'], "config.json")) as f:
-                self.retention_config = json.load(f)
+            self.retention_config = config
 
     @pd.api.extensions.register_dataframe_accessor("retention")
     class RetentioneeringDataset(BaseDataset):
 
         def __init__(self, pandas_obj):
             super(RetentioneeringDataset, self).__init__(pandas_obj)
-            with open(os.path.join(config['experiments_folder'], "config.json")) as f:
-                self.retention_config = json.load(f)
+            self.retention_config = config
 
 
 class BaseTrajectory(object):
@@ -106,16 +98,6 @@ class BaseTrajectory(object):
                 'event_name': 'event_name',
                 'event_timestamp': 'event_timestamp',
             }}
-
-    def update_config(self, config):
-        """
-        Updates retentioneering_library config without kernel restart. Works only for new pd.DaraFrames (not already initiated)
-
-        :param config:
-        :return:
-        """
-        with open(os.path.join(self.retention_config['experiments_folder'], "config.json"), "w") as f:
-            json.dump(config, f)
 
     def _init_cols(self, caller_locals):
         if caller_locals:
@@ -877,7 +859,7 @@ class BaseDataset(BaseTrajectory):
             )
             if res is not None:
                 self._tsne = res
-        return self.clusters
+        return self.clusters, res
 
     def _create_cluster_mapping(self, ids):
         self.cluster_mapping = {}

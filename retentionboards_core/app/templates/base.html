@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Investing Hedger</title>
+    <title>RetentionBoards</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content=""/>
     <meta name="keywords" content=""/>
@@ -228,6 +228,28 @@
         if (event.target.classList.contains('modal'))
             event.target.style.display = "none";
     }
+</script>
+
+<script>
+    var interval = 100;  // 1000 = 1 second, 3000 = 3 seconds
+    function doAjax() {
+        var task = '{{task_id}}';
+        var id = '{{eventset_name}}';
+        $.ajax({
+            type: 'POST',
+            url: '/web/app/dashboard/check_status/',
+            data: {'task_id' : task},
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            dataType: 'json',
+            success: function (data) {
+                $('#' + id).text(data);
+            },
+            complete: function (data) {
+                setTimeout(doAjax, interval);
+            }
+        });
+    }
+    doAjax();
 </script>
 
 </html>

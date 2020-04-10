@@ -2,6 +2,8 @@
 
 {% block content %}
 
+    {%  load static %}
+
     <style>
         .x_title .filter {
             width: 40%;
@@ -25,9 +27,10 @@
             color: #BDBDBD
         }
 
+
+
         .x_panel {
             position: relative;
-            width: 100%;
             margin-bottom: 10px;
             padding: 10px 17px;
             display: inline-block;
@@ -37,7 +40,9 @@
             -moz-column-break-inside: avoid;
             column-break-inside: avoid;
             opacity: 1;
-            transition: all .2s ease
+            transition: all .2s ease;
+            width: 1300px;
+            margin-left: 50px;
         }
 
         .x_title {
@@ -87,70 +92,55 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12 animate-box">
-                    <article>
+                    <article style="width: 1300px; margin-left: 50px">
                         <div class="text-right top-right">
-                            <a href="{{ portfolio.optimize_href }}">
-                                <i class="icon-gears" style="margin-right: 2%"></i>
-                            </a>
                             <a href="{{ portfolio.delete_href }}">
                                 <i class="icon-cross"
                                    style="color: red;%"></i>
                             </a>
                         </div>
                         <a>
-                            <h3>{{ portfolio.name }}</h3>
+                            <h3>Eventset name: {{ eventset.name }}</h3>
                         </a>
                     </article>
                 </div>
                 <div class="row">
-                    <div class="col-md-4 text-center animate-box">
+                    <div class="col-md-3 text-center animate-box">
                         <div class="services">
-                            <article>
+                            <article style="margin-left: 50px; width: 200px">
                                 <a>
-                                    <h3>Portfolio return</h3>
-                                    <h2>{{ portfolio.get_profit_percent }}%</h2>
+                                    <h3>Total users</h3>
+                                    <h2>{{ eventset.users }}</h2>
                                 </a>
                             </article>
                         </div>
                     </div>
-                    <div class="col-md-4 text-center animate-box">
+                    <div class="col-md-3 text-center animate-box">
                         <div class="services">
-                            <article>
+                            <article style="margin-left: 50px; width: 200px">
                                 <a>
-                                    <h3>Portfolio beta</h3>
-                                    <h2>{{ beta }}</h2>
+                                    <h3>Total events</h3>
+                                    <h2>{{ eventset.events }}</h2>
                                 </a>
                             </article>
                         </div>
                     </div>
-                    <div class="col-md-4 text-center animate-box">
+                    <div class="col-md-3 text-center animate-box">
                         <div class="services">
-                            <article>
+                            <article style="margin-left: 50px; width: 200px">
                                 <a>
-                                    <h3>Portfolio sharpe</h3>
-                                    <h2>{{ sharpe }}</h2>
+                                    <h3>Events per user</h3>
+                                    <h2>{{ eventset.events_per_user }}</h2>
                                 </a>
                             </article>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 text-center animate-box">
+                    <div class="col-md-3 text-center animate-box">
                         <div class="services">
-                            <article>
+                            <article style="margin-left: 50px; width: 200px">
                                 <a>
-                                    <h3>Portfolio weights</h3>
-                                    <h2>{{ weights }}</h2>
-                                </a>
-                            </article>
-                        </div>
-                    </div>
-                    <div class="col-md-6 text-center animate-box">
-                        <div class="services">
-                            <article>
-                                <a>
-                                    <h3>Suggested weights</h3>
-                                    <h2>{{ alt_weights }}</h2>
+                                    <h3>Unique events</h3>
+                                    <h2>{{ eventset.unique_events }}</h2>
                                 </a>
                             </article>
                         </div>
@@ -160,95 +150,42 @@
                     <div class="col-md-12 col-sm-12 col-xs-12 animate-box">
                         <div class="x_panel">
                             <div class="x_title">
-                                <h2>Markowitz Frontier</h2>
+                                <h2>Step Matrix</h2>
                                 <div class="clearfix"></div>
                             </div>
-                            <div class="x_content">
-
-                                {% if frontier %}
-                                    <div>
-                                        {{ frontier|safe }}
-                                    </div>
-                                {% endif %}
-
-                            </div>
+                            <img src="{% static step_matrix_link %}" width="1300px" height="900px">
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12 animate-box">
+                    <div class="col-md-12 col-sm-12 col-xs-12 animate-box">
                         <div class="x_panel">
                             <div class="x_title">
-                                <h2>Portfolio Price</h2>
+                                <h2>TSNE</h2>
                                 <div class="clearfix"></div>
                             </div>
-                            <div class="x_content">
-
-                                {% if graph %}
-                                    <div>
-                                        {{ graph|safe }}
-                                    </div>
-                                {% endif %}
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 col-sm-6 col-xs-12 animate-box">
-                        <div class="x_panel">
-                            <div class="x_title">
-                                <h2>Portfolio Volatile</h2>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="x_content">
-
-                                {% if change %}
-                                    <div>
-                                        {{ change|safe }}
-                                    </div>
-                                {% endif %}
-
-                            </div>
+                        <img src="{% static tsne_link %}" width="1200px" height="800px" style="align-self: center">
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12 animate-box">
-                        <div class="x_panel">
-                            <div class="x_title">
-                                <h2>Stock Prices</h2>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="x_content">
-
-                                {% if stocks %}
-                                    <div>
-                                        {{ stocks|safe }}
-                                    </div>
-                                {% endif %}
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 col-sm-6 col-xs-12 animate-box">
-                        <div class="x_panel">
-                            <div class="x_title">
-                                <h2>Stocks Volatile</h2>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="x_content">
-
-                                {% if stock_change %}
-                                    <div>
-                                        {{ stock_change|safe }}
-                                    </div>
-                                {% endif %}
-
+                {% for graph_file in graphs %}
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12 animate-box">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                    {% if graph_file %}
+                                        <div>
+                                            {{ graph_file|safe }}
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
