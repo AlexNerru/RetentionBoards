@@ -119,16 +119,17 @@ class ExperimentView(View):
                 tsne.save('staticfiles/' + tsne_link)
 
             graph = None
-            graphs = []
+            graphs_all = []
+
             if AsyncResult(task_tsne).result is not None:
                 for cluster in AsyncResult(task_tsne).result[1]:
                     graph = pickle.loads(redis.get(cluster))
                     with open(f'staticfiles/images/experiments/graphs/{cluster}.html', 'w+') as f:
                         f.write(graph)
-                    graphs.append(graph)
+                    graphs_all.append([f'/web/app/dashboard/experiments/{pk}/{cluster}/', cluster])
 
-            return render(request, 'experiment.html',  {'eventset': eventset, 'tsne_link': tsne_link,
-                                                        'step_matrix_link': step_matrix_link, 'graphs': graphs[1:]})
+            return render(request, self.template,  {'eventset': eventset, 'tsne_link': tsne_link,
+                                                        'step_matrix_link': step_matrix_link, 'graphs_all': graphs_all})
                 #else:
                 #    portfolios = Portfolio.objects.filter(user=request.user.profile).all()
                 #    portfolio_list = get_portfolios_list(portfolios=portfolios)
@@ -136,6 +137,18 @@ class ExperimentView(View):
                 #    return render(request, 'portfolios_list.html', {'list': portfolio_list})
         else:
             messages.add_message(request, messages.ERROR, 'You are not authentificated')
+            return redirect('/web/app/')
+
+class GraphView(View):
+    template = "graph.html"
+
+    def get(self, request, pk, cluster):
+        if request.user.is_authenticated:
+            with open(f'staticfiles/images/experiments/graphs/{cluster}.html', 'r') as f:
+                graph = f.read()
+            return render(request, self.template, {'graph': graph})
+        else:
+            messages.error(request, 'USER IS NOT AUTHENTICATED')
             return redirect('/web/app/')
 
 

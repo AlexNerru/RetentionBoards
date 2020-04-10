@@ -27,8 +27,6 @@
             color: #BDBDBD
         }
 
-
-
         .x_panel {
             position: relative;
             margin-bottom: 10px;
@@ -41,8 +39,6 @@
             column-break-inside: avoid;
             opacity: 1;
             transition: all .2s ease;
-            width: 1300px;
-            margin-left: 50px;
         }
 
         .x_title {
@@ -92,7 +88,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12 animate-box">
-                    <article style="width: 1300px; margin-left: 50px">
+                    <article>
                         <div class="text-right top-right">
                             <a href="{{ portfolio.delete_href }}">
                                 <i class="icon-cross"
@@ -107,7 +103,7 @@
                 <div class="row">
                     <div class="col-md-3 text-center animate-box">
                         <div class="services">
-                            <article style="margin-left: 50px; width: 200px">
+                            <article>
                                 <a>
                                     <h3>Total users</h3>
                                     <h2>{{ eventset.users }}</h2>
@@ -117,7 +113,7 @@
                     </div>
                     <div class="col-md-3 text-center animate-box">
                         <div class="services">
-                            <article style="margin-left: 50px; width: 200px">
+                            <article>
                                 <a>
                                     <h3>Total events</h3>
                                     <h2>{{ eventset.events }}</h2>
@@ -127,7 +123,7 @@
                     </div>
                     <div class="col-md-3 text-center animate-box">
                         <div class="services">
-                            <article style="margin-left: 50px; width: 200px">
+                            <article>
                                 <a>
                                     <h3>Events per user</h3>
                                     <h2>{{ eventset.events_per_user }}</h2>
@@ -137,7 +133,7 @@
                     </div>
                     <div class="col-md-3 text-center animate-box">
                         <div class="services">
-                            <article style="margin-left: 50px; width: 200px">
+                            <article>
                                 <a>
                                     <h3>Unique events</h3>
                                     <h2>{{ eventset.unique_events }}</h2>
@@ -153,7 +149,7 @@
                                 <h2>Step Matrix</h2>
                                 <div class="clearfix"></div>
                             </div>
-                            <img src="{% static step_matrix_link %}" width="1300px" height="900px">
+                            <img src="{% static step_matrix_link %}" width="1100px" height="800px">
                         </div>
                     </div>
                 </div>
@@ -164,25 +160,22 @@
                                 <h2>TSNE</h2>
                                 <div class="clearfix"></div>
                             </div>
-                        <img src="{% static tsne_link %}" width="1200px" height="800px" style="align-self: center">
+                        <img src="{% static tsne_link %}" width="1100px" height="800px" style="align-self: center">
                         </div>
                     </div>
                 </div>
-                {% for graph_file in graphs %}
+                {% for graph_element in graphs_all %}
                     <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12 animate-box">
-                            <div class="x_panel">
-                                <div class="x_title">
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div class="x_content">
-                                    {% if graph_file %}
-                                        <div>
-                                            {{ graph_file|safe }}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                            <article>
+                                <a href={{ graph_element.0 }}>
+
+                                <span class="icon">
+                                    <i class="icon-bar-graph"></i>
+                                </span>
+                                <h2>{{ graph_element.1 }}</h2>
+                                </a>
+                            </article>
                         </div>
                     </div>
                 {% endfor %}
