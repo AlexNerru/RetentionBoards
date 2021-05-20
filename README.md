@@ -2,7 +2,8 @@
 
 ## Description
 
-RetentionBoards is a web application to work with retentioneering-tools (https://github.com/retentioneering/retentioneering-tools)
+RetentionBoards is a web application to work with retentioneering-tools (https://github.com/retentioneering/retentioneering-tools).
+Made as course work of Faculty of Computer Science, HSE.
 
 ## Deploy
 
